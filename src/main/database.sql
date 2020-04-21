@@ -229,6 +229,18 @@ CREATE TABLE WishList
 )
   ENGINE = InnoDB;
 
+-- auto-generated definition
+CREATE TABLE Compare
+(
+  id     INT AUTO_INCREMENT
+    PRIMARY KEY,
+  itemId INT NULL,
+  userId INT NULL,
+  CONSTRAINT Compare_id_uindex
+  UNIQUE (id)
+)
+  ENGINE = InnoDB;
+
 
 
 

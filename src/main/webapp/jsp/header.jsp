@@ -107,6 +107,8 @@
                     Amazon.in</a> &nbsp;&nbsp;&nbsp;
                 <a href="/amazonpay">Amazon Pay</a>&nbsp;&nbsp;&nbsp;
                 <a href="/sellerlogin">Sell</a>&nbsp;&nbsp;&nbsp;
+                <a href="/compare">Compare now</a>&nbsp;&nbsp;&nbsp;
+                <a href="/deals">Deals</a>&nbsp;&nbsp;&nbsp;
                 <% if(user!=null && user.getEmailId().equals("admin@admin.com")) { %>
                     <a href="/admin">admin</a> &nbsp;&nbsp;
                 <%}%>

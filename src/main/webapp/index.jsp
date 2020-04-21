@@ -123,6 +123,12 @@
     <div class="row">
         <a href="/report">Report</a>
     </div>
+    <div class="row">
+        <a href="/exam1">exam1</a>
+    </div>
+    <div class="row">
+        <a href="/exam2">exam2</a>
+    </div>
 </div>
 <%@include file="jsp/footer.jsp" %>
 </body>

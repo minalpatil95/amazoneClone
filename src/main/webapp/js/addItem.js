@@ -119,7 +119,7 @@ $(document).ready(function() {
     function addItemResponse(response) {
         if(response.status ===201){
             alert("Item Created");
-            window.location.replace("/seller");
+            window.location.replace("/selleritems");
         }else if(response.status === 401){
             alert("Not authorized");
             window.location.replace("/sellerlogin");

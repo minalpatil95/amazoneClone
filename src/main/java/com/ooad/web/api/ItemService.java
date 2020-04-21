@@ -5,10 +5,7 @@
 
 package com.ooad.web.api;
 
-import com.ooad.web.dao.CartDao;
-import com.ooad.web.dao.ItemCategoryDao;
-import com.ooad.web.dao.ItemDao;
-import com.ooad.web.dao.UserDao;
+import com.ooad.web.dao.*;
 import com.ooad.web.model.*;
 import com.ooad.web.utils.TokenAuth;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -26,6 +23,7 @@ import javax.ws.rs.core.Response.Status;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -352,23 +350,6 @@ public class ItemService {
         resp.put("status",Status.OK.getStatusCode() );
         return Response.status(Status.OK).entity(resp.toString()).build();
     }
-/*
-    @PUT
-    @Path("/update/{id}")
-    @Consumes(MediaType.TEXT_PLAIN)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateItem(@HeaderParam("sellerAuthToken")String token,@PathParam("id") int itemId,String req) {
-        Seller s = TokenAuth.getSellerFromToken(token);
-        JSONObject reqJson = new JSONObject(req);
-        if (s == null) {
-            return Response.status(Status.OK).entity(new JSONObject()
-                    .put("status", Status.UNAUTHORIZED.getStatusCode()).toString()).build();
-        }
-        Item item = Item.find(itemId);
-        JSONObject jsonObject = item.updateItem(reqJson);
-        return Response.status(Status.OK).entity(jsonObject.toString()).build();
-    }*/
-
 
     @PUT
     @Path("/update/{id}")
@@ -386,7 +367,7 @@ public class ItemService {
         return Response.status(Status.OK).entity(jsonObject.toString()).build();
     }
 
-    @GET
+   /* @GET
     @Path("/compare/{id_1}/{id_2}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response compareItems(@PathParam("id_1")int itemId1, @PathParam("id_2") int itemId2 ){
@@ -398,7 +379,7 @@ public class ItemService {
         return Response.status(Status.OK).entity(r.toString()).build();
 
     }
-
+*/
     @DELETE
     @Path("/cart/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -409,5 +390,57 @@ public class ItemService {
         return Response.status(Status.OK).entity(r.toString()).build();
     }
 
+    @POST
+    @Path("/compare")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response compareItems(@HeaderParam("authToken")String token,String req){
+        User u = TokenAuth.getUserFromToken(token);
+        if(u==null){
+            return Response.status(Status.OK).entity(new JSONObject().put("status", Status.UNAUTHORIZED.getStatusCode())).build();
+        }
+        JSONObject j = new JSONObject(req);
+        int itemId = j.getInt("itemId");
+        UserDao userDao = new UserDao();
+        CompareItem c = userDao.addItemToCompareList(u, itemId);
+        return Response.status(Status.OK).entity(new JSONObject().put("status", Status.OK.getStatusCode()).toString()).build();
+    }
+
+    @DELETE
+    @Path("/compare/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeItemFromCompareList(@HeaderParam("authToken")String token,@PathParam("id") int compareListItemId){
+        User u = TokenAuth.getUserFromToken(token);
+        UserDao userDao = new UserDao();
+        userDao.removeCompareListItem(compareListItemId);
+        return Response.status(Status.OK).entity(new JSONObject().put("status", Status.OK.getStatusCode()).toString()).build();
+    }
+
+    @Path("/exam1")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItemByEmailId(String req) {
+        JSONObject j = new JSONObject(req);
+        String emailId = j.getString("emailId");
+        Seller s =null;
+        Seller seller = s.find(emailId);
+        System.out.println(seller);
+        int sellerId=seller.getId();
+        Collection<Item> item = Item.getAllSellerItems(sellerId);
+        System.out.println(item);
+        JSONObject returnObject = new JSONObject();
+        if (item != null) {
+            returnObject.put("item", item);
+            returnObject.put("status", Status.OK.getStatusCode());
+            returnObject.put("errors", "");
+            return Response.status(Status.OK).entity(returnObject.toString()).build();
+        } else {
+            returnObject.put("item", "");
+            returnObject.put("status", Status.BAD_REQUEST.getStatusCode());
+            returnObject.put("errors", "No Item Exists");
+            return Response.status(Status.OK).entity(returnObject.toString()).build();
+        }
+    }
 
 }

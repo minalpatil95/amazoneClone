@@ -4,7 +4,8 @@
 <%@ page import="com.ooad.web.model.Offer.Offer" %>
 <%@ page import="com.ooad.web.model.Offer.DiscountOffer" %>
 <%@ page import="com.ooad.web.model.Offer.PriceOffer" %>
-<%@ page import="com.ooad.web.model.Offer.BuyXGetYOffer" %><%--
+<%@ page import="com.ooad.web.model.Offer.BuyXGetYOffer" %>
+<%--
   Created by IntelliJ IDEA.
   User: minal
   Date: 17/3/18
@@ -164,7 +165,7 @@
                                 <option value="202">Price Offer</option>
                                 <option value="203">Buy X Get Y free</option>
                             </select>
-                            <em>Previous offer: <%=o.getOfferCode()%>,Validity: <%=o.getStartDate()%> to <%=o.getEndDate()%>, Offer: </em>
+                            <em>Previous offer: <%=o.getOfferCode()%>,Validity: <%=o.getStartDate()%> to <%=o.getEndDate()%>,DealId: <%=o.getDealId()%> Offer: </em>
                             <%if(o.getOfferCode()==-1){%>No Offer<%}%>
                             <%if(o.getOfferCode()==201) {%>
                                 Discount percentage= <%=((DiscountOffer)o).getPercentage()%>
@@ -180,6 +181,8 @@
                             <%}%>
 
                             <div id="date" hidden>
+                                <label for="dealId">Deal Id*</label>
+                                <input type="text" id = dealId value="dealId">
                                 <label for="startDate" class="a-form-label">Start Date*</label>
                                 <input type="date" id="startDate" value="2018-04-13">
                                 <label for="endDate" class="a-form-label">End Date*</label>

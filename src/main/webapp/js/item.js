@@ -69,6 +69,28 @@ $(document).ready(function () {
         })
     });
 
+    $('#compare').click(function () {
+        var formData = {
+            'itemId':$('#itemId').val()
+        };
+        $.ajax({
+            type:'POST',
+            url:'/api/item/compare',
+            data:JSON.stringify(formData),
+            dataType: "json",
+            contentType:'text/plain',
+            cache:false,
+            headers:{
+                'authToken':$.cookie('authToken')
+            },
+            success:function (resp) {
+                if(resp.status == 401){
+                    window.location.replace('/login');
+                }
+            }
+        })
+    });
+
 
 });
 

@@ -98,7 +98,7 @@
                         <div class="col-sm-1"><img src="<%=i.getUrl()%>" width="150" height="150" class = "img-responsive"></div>
                         <div class="col-sm-1"><%=i.getName()%></div>
                         <div class="col-sm-1"><%=i.getItemBarcode()%></div>
-                        <div class="col-sm-1"><%=i.getPrice()%></div>
+                        <div class="col-sm-1">&#2352;<%=i.getPrice()%></div>
                         <div class="col-sm-1"><%=o.getOfferCode()%></div>
                         <div class="col-sm-1"><%=i.getBrand()%></div>
                         <div class="col-sm-2"><%=i.getSubCategory().getItemCategory().getDisplayName()%></div>

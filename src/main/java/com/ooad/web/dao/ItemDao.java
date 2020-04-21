@@ -132,7 +132,7 @@ public class ItemDao {
             PreparedStatement ps = con
                     .prepareStatement("UPDATE Items SET name = ? ,price = ?,url = ?," +
                             "sellerId = ? ,description = ? ,brand = ?,height = ?,width = ? "+
-                            ",quantity = ? WHERE id = ?");
+                            ",quantity = ?,itemQtySold=? WHERE id = ?");
             ps.setString(1, item.getName());
             ps.setFloat(2, item.getPrice());
             ps.setString(3, item.getUrl());
@@ -142,7 +142,8 @@ public class ItemDao {
             ps.setFloat(7, item.getHeight());
             ps.setFloat(8, item.getWidth());
             ps.setInt(9,item.getQuantity());
-            ps.setInt(10,item.getId());
+            ps.setInt(10,item.getItemQtySold());
+            ps.setInt(11,item.getId());
             ps.executeUpdate();
             con.close();
             return true;
@@ -170,11 +171,13 @@ public class ItemDao {
         final int subCategoryId = rs.getInt("SubCategoryId");
         final int itemBarcode = rs.getInt("itemBarcode");
         final String itemColour=rs.getString("itemColour");
+        final int itemQtySold = rs.getInt("itemQtySold");
         SellerDao sellerDao = new SellerDao();
         Seller seller = sellerDao.getSeller(sellerId);
         return new Item(id, name, price, url, quantity, seller, itemDescription, brand, height,
-                width, getItemDetails(id),getOffer(offerId),getItemSubCategory(subCategoryId),itemBarcode,itemColour);
+                width, getItemDetails(id),getOffer(offerId),getItemSubCategory(subCategoryId),itemBarcode,itemColour,itemQtySold);
     }
+
     public ItemSubCategory getItemSubCategory(int subCategoryId){
         try {
             Connection con = Database.getConnection();
@@ -431,8 +434,8 @@ public class ItemDao {
     public void saveOffer(Offer offer) {
         try {
             Connection con = Database.getConnection();
-            PreparedStatement ps = con.prepareStatement("UPDATE offers SET offerType=?, discountPercentage=?, price=?," +
-                    "x=?, y=?, startDate=?, endDate=?  WHERE id=?");
+            PreparedStatement ps = con.prepareStatement("UPDATE Offers SET offerType=?, discountPercentage=?, price=?," +
+                    "x=?, y=?, startDate=?, endDate=?, dealId=?  WHERE id=?");
             ps.setInt(1,offer.getOfferCode());
             if(offer.getOfferCode()==201){
                 DiscountOffer discountOffer = (DiscountOffer) offer;
@@ -456,7 +459,8 @@ public class ItemDao {
             }
             ps.setDate(6, new java.sql.Date(offer.getStartDate().getTime()));
             ps.setDate(7,new java.sql.Date(offer.getEndDate().getTime()));
-            ps.setInt(8,offer.getId());
+            ps.setString(8,offer.getDealId());
+            ps.setInt(9,offer.getId());
             ps.executeUpdate();
             con.close();
         } catch (ClassNotFoundException e) {
@@ -465,5 +469,34 @@ public class ItemDao {
             e.printStackTrace();
         }
 
+    }
+
+    public Collection<Item> getAllDealItem() {
+        try {
+            Date currentDate = new Date();
+            System.out.println(currentDate);
+            java.util.Date utilDate = new java.util.Date();
+            System.out.println("Util date in Java : " + utilDate);
+            // contains only date information without time
+            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+            System.out.println("SQL date in Java : " + sqlDate);
+            System.out.println(sqlDate.getTime());
+
+            Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Items,Offers WHERE Items.offerId=Offers.id AND Offers.endDate >= '"+sqlDate+"'");
+            ResultSet rs = ps.executeQuery();
+            //ps.setDate(1,sqlDate);
+            Collection<Item> item = new ArrayList<Item>();
+            while(rs.next()){
+                item.add(itemBuilder(rs));
+            }
+            con.close();
+            return item;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

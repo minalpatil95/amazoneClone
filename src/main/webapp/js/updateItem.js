@@ -18,6 +18,7 @@ function update(id) {
                 'bundleOfferY': $('#bundleOfferY').val(),
                 'startDate': $('#startDate').val(),
                 'endDate': $('#endDate').val(),
+                'dealId':$('#dealId').val()
             };
             console.log(jsonData);
 

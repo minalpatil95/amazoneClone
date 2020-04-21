@@ -331,4 +331,9 @@ public class Seller {
     public static Collection<Seller> getAllSellers(){
         return new SellerDao().getAllSeller();
     }
+
+    public static Seller find(String emailId) {
+        SellerDao sellerDao = new SellerDao();
+        return sellerDao.getSeller(emailId);
+    }
 }

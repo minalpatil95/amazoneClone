@@ -35,10 +35,20 @@ public class Item {
     private int itemBarcode;
     private String itemColour;
 
+    public int getItemQtySold() {
+        return itemQtySold;
+    }
+
+    public void setItemQtySold(int itemQtySold) {
+        this.itemQtySold = itemQtySold;
+    }
+
+    private int itemQtySold;
+
 
     public Item(int id, String name, float price, String url, int quantity, Seller seller,
                 String description, String brand, float height, float width, JSONArray itemDetails,
-                Offer offer, ItemSubCategory subCategory,int itemBarcode, String itemColour) {
+                Offer offer, ItemSubCategory subCategory,int itemBarcode, String itemColour, int itemQtySold) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -54,6 +64,7 @@ public class Item {
         this.offer = offer;
         this.subCategory=subCategory;
         this.itemColour=itemColour;
+        this.itemQtySold=itemQtySold;
     }
 
     public static ArrayList<Item> getLastFive() {
@@ -198,6 +209,7 @@ public class Item {
                 ", itemDetails=" + itemDetails +
                 ", itemBarcode=" + itemBarcode +
                 ", itemColour=" + itemColour +
+                ", itemQtySold=" + itemQtySold +
                 '}';
     }
 
@@ -228,6 +240,7 @@ public class Item {
         itemJsonObject.put("itemBarcode",this.itemBarcode);
         itemJsonObject.put("itemColour",this.itemColour);
         itemJsonObject.put("offer",this.offer.toJSON());
+        itemJsonObject.put("itemQtySold",itemQtySold);
         return itemJsonObject;
     }
 
@@ -278,6 +291,7 @@ public class Item {
         String start = req.getString("startDate");
         String end = req.getString("endDate");
         int subCategoryId = req.getInt("subCategoryId");
+
         ItemDao itemDao = new ItemDao();
         ItemSubCategory itemSubCategory = itemDao.getItemSubCategory(subCategoryId);
         this.subCategory = itemSubCategory;
@@ -327,6 +341,10 @@ public class Item {
         this.setItemColour(req.getString("itemColour"));
         this.itemSave();
         return new JSONObject().put("status", Response.Status.OK.getStatusCode());
+    }
+
+    public static Collection<Item> getAllDealItems() {
+        return new ItemDao().getAllDealItem();
     }
 
 }

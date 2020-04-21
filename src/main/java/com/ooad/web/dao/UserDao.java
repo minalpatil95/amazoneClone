@@ -442,4 +442,91 @@ public class UserDao {
         return new User(id, userName, emailId, password, isEnabled, amazonPayBalance, defaultAddressId);
     }
 
+    public CompareItem addItemToCompareList(User u, int itemId) {
+        return addItemToCompareList(u.getId(),itemId );
+    }
+
+    public CompareItem addItemToCompareList(int userId,int itemId){
+        try {
+            Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement("INSERT INTO Compare(userId, itemId) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1,userId );
+            ps.setInt(2,itemId );
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next()){
+                int id = rs.getInt(1);
+                return new CompareItem(id,Item.find(itemId));
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public CompareItem getCompareListItem(int id) {
+        Connection con = null;
+        try {
+            con = Database.getConnection();
+            PreparedStatement ps= con.prepareStatement("SELECT * FROM Compare WHERE id=?");
+            ps.setInt(1,id );
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                return compareListItemBuilder(rs);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private CompareItem compareListItemBuilder(ResultSet rs) {
+        if(rs == null){
+            return null;
+        }
+        try {
+            final Item item = Item.find(rs.getInt("itemId"));
+            final int id = rs.getInt("id");
+            return new CompareItem(id,item);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<CompareItem> getCompareListByUserId(int id){
+        ArrayList<CompareItem> compareListItems = new ArrayList<CompareItem>();
+        try {
+            Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM Compare WHERE userId = ? ORDER BY id DESC ");
+            ps.setInt(1,id );
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                compareListItems.add(compareListItemBuilder(rs));
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return compareListItems;
+    }
+
+    public void removeCompareListItem(int id){
+        try {
+            Connection con = Database.getConnection();
+            PreparedStatement ps = con.prepareStatement("DELETE FROM Compare WHERE id = ?");
+            ps.setInt(1,id );
+            ps.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -254,5 +254,45 @@
         <url-pattern>/exam</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <display-name>CompareController</display-name>
+        <servlet-name>compare</servlet-name>
+        <servlet-class>com.ooad.web.controller.CompareController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>compare</servlet-name>
+        <url-pattern>/compare</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <display-name>Exam2Controller</display-name>
+        <servlet-name>exam2</servlet-name>
+        <servlet-class>com.ooad.web.controller.Exam2Controller</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exam2</servlet-name>
+        <url-pattern>/exam2</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <display-name>DealsController</display-name>
+        <servlet-name>deals</servlet-name>
+        <servlet-class>com.ooad.web.controller.DealsController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>deals</servlet-name>
+        <url-pattern>/deals</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <display-name>Exam1Controller</display-name>
+        <servlet-name>exam1</servlet-name>
+        <servlet-class>com.ooad.web.controller.Exam1Controller</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exam1</servlet-name>
+        <url-pattern>/exam1</url-pattern>
+    </servlet-mapping>
 
 </web-app>

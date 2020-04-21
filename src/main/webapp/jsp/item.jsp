@@ -171,6 +171,9 @@
                 <div>
                     <input type="button" class="btn1" id="moveToList" value="Save for Later">
                 </div>
+                <div>
+                    <input type="button" class="btn1" id="compare" value="Add to Compare">
+                </div>
 
             </div>
 

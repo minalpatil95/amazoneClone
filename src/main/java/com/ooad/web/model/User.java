@@ -299,6 +299,7 @@ public class User {
                     int id = orderItem.getItem().getId();
                     Item item = itemDao.getItembyId(id);
                     item.setQuantity(item.getQuantity()-orderItem.getQuantity());
+                    item.setItemQtySold(orderItem.getQuantity());
                     item.save();
                 }
                 order.setOrderStatus(OrderStatus.MONEY_PAID);
@@ -321,6 +322,7 @@ public class User {
                     int id = orderItem.getItem().getId();
                     Item item = itemDao.getItembyId(id);
                     item.setQuantity(item.getQuantity() - orderItem.getQuantity());
+                    item.setItemQtySold(orderItem.getQuantity());
                     item.save();
                 }
                 order.setOrderStatus(OrderStatus.MONEY_PAID);
@@ -373,4 +375,11 @@ public class User {
     public  static Collection<User> getAllUsers(){
         return new UserDao().getAllUser();
     }
+
+    public ArrayList<CompareItem> getUserCompareList(){
+        UserDao userDao = new UserDao();
+        return userDao.getCompareListByUserId(this.id);
+    }
+
+
 }
